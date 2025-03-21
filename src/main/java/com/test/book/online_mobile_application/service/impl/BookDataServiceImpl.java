@@ -114,4 +114,9 @@ public class BookDataServiceImpl implements BookDataService {
         repository.delete(optionalBookData.get());
         return "Success";
     }
+
+    @Override
+    public BookData getBookDataByBookIdAndOrderId(Integer bookId, Integer orderId) {
+        return repository.getBookDataByBookIdAndOrderId(bookId, orderId);
+    }
 }
