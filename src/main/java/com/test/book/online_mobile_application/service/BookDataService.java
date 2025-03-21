@@ -6,4 +6,6 @@ public interface BookDataService {
     String createBook(BookRequestDTO bookRequestDTO);
 
     String updateBook(Integer id, BookRequestDTO bookRequestDTO);
+
+    String deleteBook(Integer id);
 }

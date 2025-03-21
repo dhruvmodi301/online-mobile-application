@@ -11,6 +11,8 @@ import com.test.book.online_mobile_application.service.BookDataService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +38,11 @@ public class BookController {
     @PutMapping("/update/{id}")
     public String updateBook(@PathVariable Integer id, @RequestBody BookRequestDTO bookRequestDTO) {
         log.debug("id: {} bookRequestDTO: {}", id, bookRequestDTO);
-        return "";
+        return bookDataService.updateBook(id, bookRequestDTO);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteBook(@PathVariable Integer id) {
+        log.debug("id: {}", id);
     }
 }

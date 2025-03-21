@@ -70,6 +70,48 @@ public class BookDataServiceImpl implements BookDataService {
             return "Invalid book id";
         }
 
-        return "";
+        try {
+            BookData bookData = optionalBookData.get();
+            bookData.setBookTitle(bookRequestDTO.getBookTitle());
+            bookData.setIsbn(bookRequestDTO.getIsbn());
+        
+            List<PublisherData> publisherDataList = publisherDataService.getPublisherDataByPublisherName(bookRequestDTO.getPublisherName());
+        
+            PublisherData publisherData = null;
+            if (publisherDataList.isEmpty()) {
+                publisherData = publisherDataService.createPublisherData(bookRequestDTO.getPublisherName());
+            } else {
+                publisherData = publisherDataList.get(0);
+            }
+        
+            bookData.setPublisherId(publisherData.getPublisherId());
+        
+            MultipartFile file = bookRequestDTO.getFile();
+            String fileName = bookRequestDTO.getIsbn() + "_" + file.getOriginalFilename();
+            file.transferTo(new File("D:\\" + fileName));
+    
+            bookData.setBookFileName(fileName);
+            bookData.setBorrowDuration(bookRequestDTO.getBorrowDuration());
+            bookData.setBorrowPrice(bookRequestDTO.getBorrowPrice());
+            bookData = repository.save(bookData);
+        
+            log.debug("Leaving createBook bookData: {}", bookData);
+            return "Success";    
+        } catch (Exception exception) {
+            log.error("Exception occurred while updating book data. Error Message: {}", exception.getMessage(), exception);
+            return exception.getMessage();
+        }
+    }
+
+    @Override
+    public String deleteBook(Integer id) {
+        Optional<BookData> optionalBookData = repository.findById(id);
+
+        if (optionalBookData.isEmpty()) {
+            return "Invalid book id";
+        }
+
+        repository.delete(optionalBookData.get());
+        return "Success";
     }
 }
